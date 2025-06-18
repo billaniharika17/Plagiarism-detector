@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Plagiarism Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2b2d42;
+      font-weight: 600;
+      font-size: 2rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #ced4da;
+      font-size: 1rem;
+      background: #f8f9fa;
+      resize: vertical;
+      transition: border 0.2s ease-in-out;
+    }
+
+    textarea:focus {
+      border-color: #74c0fc;
+      outline: none;
+    }
+
+    button {
+      background-color: #74c0fc;
+      color: white;
+      border: none;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #4dabf7;
+    }
+
+    .result,
+    .rewritten-section {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    .percentage {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .plagiarized {
+      color: #e03131;
+    }
+
+    .not-plagiarized {
+      color: #2f9e44;
+    }
+
+    .confidence {
+      font-weight: 500;
+      color: #555;
+      margin-top: 5px;
+    }
+
+    .rewritten-text {
+      white-space: pre-wrap;
+      background-color: #f8f9fa;
+      padding: 14px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+    }
+
+    #spinner {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #spinner img {
+      width: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      textarea {
+        height: 130px;
+      }
+    }
+  </style>
+  <script>
+    function showSpinner() {
+      document.getElementById("spinner").style.display = "block";
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Advanced Plagiarism Detector</h1>
+    <form action="/detect" method="post" onsubmit="showSpinner()">
+      <textarea name="text" placeholder="Paste your text here..." required></textarea>
+      <button type="submit">Check for Plagiarism</button>
+    </form>
+
+    <div id="spinner">
+      <p>Analyzing...</p>
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading...">
+    </div>
+
+    {% if result %}
+      <div class="result">
+        <div>{{ result }}</div>
+        <div class="percentage {% if percentage > 50 %}plagiarized{% else %}not-plagiarized{% endif %}">
+          {{ percentage|round(1) }}% Similarity
+        </div>
+        <div class="confidence">Confidence: {{ confidence_level }}</div>
+      </div>
+
+      {% if rewritten_text %}
+        <div class="rewritten-section">
+          <h3>Rewritten Version (Plagiarism-Free)</h3>
+          <div class="rewritten-text">{{ rewritten_text }}</div>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</body>
+</html>
